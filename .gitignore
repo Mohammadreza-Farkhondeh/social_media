@@ -1,5 +1,28 @@
-# VEnv files
+# Environment
+.env
+.venv
+env/
 venv/
 
-.env
+
 .idea
+
+
+# Djanfo files
+social_media/applications/chat/__pycache__/
+social_media/applications/chat/migrations/__pycache__/
+social_media/applications/comments/__pycache__/
+social_media/applications/comments/migrations/
+social_media/applications/posts/__pycache__/
+social_media/applications/posts/migrations/
+social_media/applications/stories/__pycache__/
+social_media/applications/stories/migrations/
+social_media/applications/authy/__pycache__/
+social_media/applications/authy/migrations/
+social_media/social_media/__pycache__/
+
+
+
+/social_media/applications/chat/
+/social_media/applications/comments/
+/social_media/applications/stories/
