@@ -1,11 +1,10 @@
-from social_media.applications.posts.models import Post
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.db import models
 from PIL import Image
 import os
-
+from ..posts.models import Post
 
 
 def user_directory_path(instance, filename):
