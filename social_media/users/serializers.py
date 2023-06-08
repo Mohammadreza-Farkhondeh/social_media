@@ -9,6 +9,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = Profile
         fields = ('first_name', 'last_name', 'url', 'profile_info', 'created', 'avatar.path')
 
+
 # A serializer class for the User model
 class UserSerializer(serializers.ModelSerializer):
     # A nested serializer for the profile field

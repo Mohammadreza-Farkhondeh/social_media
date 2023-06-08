@@ -2,9 +2,9 @@ from django.db.models.signals import post_save
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.db import models
+from posts.models import Post
 from PIL import Image
 import os
-from ..posts.models import Post
 
 
 def user_directory_path(instance, filename):
@@ -15,9 +15,9 @@ def user_directory_path(instance, filename):
     if os.path.exists(full_path):  # Check if it exists, if yes, then delete the old photo
         os.remove(full_path)
 
-    return avatar_name
+    return full_path
 
-
+# Profile class has OneToOne relationship with User model that is default_AUTH-model
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     first_name = models.CharField(max_length=12, null=True, blank=True)
@@ -26,7 +26,7 @@ class Profile(models.Model):
     profile_info = models.TextField(max_length=150, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     favorites = models.ManyToManyField(Post)
-    avatar = models.ImageField(upload_to=user_directory_path, blank=True, null=True, verbose_name='Picture')
+    avatar = models.ImageField(upload_to=user_directory_path,blank=True, null=True, verbose_name='Picture')
 
     # Override the save() method to resize the image
     def save(self, *args, **kwargs):

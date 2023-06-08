@@ -1,6 +1,7 @@
 from pathlib import Path
 from datetime import timedelta
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -22,8 +23,8 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'applications.authy',
-    'applications.posts',
+    'users',
+    'posts',
 ]
 
 MIDDLEWARE = [
@@ -48,7 +49,6 @@ DATABASES = {
         'PASSWORD': 'postgresPassword',
         'HOST': 'localhost',
         'PORT': '5432',
-
     }
 }
 
@@ -72,6 +72,19 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
+LOGIN_REDIRECT_URL = 'posts:post-list'
+LOGIN_URL = 'users:token_obtain_pair'
+LOGOUT_REDIRECT_URL = 'users:token_obtain_pair'
+
+PASSWORD_HASHERS = [
+    'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
+    'django.contrib.auth.hashers.Argon2PasswordHasher',
+    'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
+    'django.contrib.auth.hashers.BCryptPasswordHasher',
+]
+
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -85,7 +98,7 @@ REST_FRAMEWORK = {
 }
 
 ACCOUNT_EMAIL_VERIFICATION = 'MANDATORY'
-ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_REQUIRED = False
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
@@ -120,3 +133,7 @@ TEMPLATES = [
 ]
 
 STATIC_URL = 'static/'
+
+
+MEDIA_ROOT = 'media/'
+MEDIA_URL = 'media/'

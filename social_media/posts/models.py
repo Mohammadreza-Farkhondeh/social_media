@@ -1,4 +1,3 @@
-from django.db.models.signals import post_save
 from django.contrib.auth.models import User
 from django.utils.text import slugify
 from django.urls import reverse
@@ -11,6 +10,7 @@ def user_directory_path(instance, filename):
     return f'/user_{instance.user.id}/{filename}'
 
 
+# Define Tag model for its usage in post model
 class Tag(models.Model):
     title = models.TextField(max_length=16, verbose_name='Tag')
     slug = models.SlugField(unique=True)
@@ -21,7 +21,7 @@ class Tag(models.Model):
     def get_absolute_url(self):
         return reverse('Tag', args=[self.slug])
 
-    # Define save method for saving tag
+    # Override save method for saving tag (consider if there is no slug)
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.title)
@@ -29,6 +29,7 @@ class Tag(models.Model):
 
     def __str__(self):
         return self.title
+
 
 # Define class of postContent model to save file location and its owner
 class PostContent(models.Model):
@@ -58,28 +59,17 @@ class Follow(models.Model):
     following = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='following')
 
 
-# Define class for displaying stream of posts among users (a stream of post from following to follower)
-class Stream(models.Model):
-    following = models.ForeignKey(User, on_delete=models.CASCADE, related_name='stream_following')
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, null=True)
-    date = models.DateTimeField()
-
-    # define function to create streams after each post saves
-    def add_post(sender, instance, *args, **kwargs):
-        post = instance
-        user = post.user
-        followers = Follow.objects.all().filter(following=user)
-        for follower in followers:
-            stream = Stream(post=post, user=follower.follower, date=post.posted, following=user)
-            stream.save()
-
-
-class Likes(models.Model):
+# A model for displaying who likes which post in each row
+class Like(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='like_user')
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='like_post')
 
 
-# Get signal of saving a post then do stuff
-# Stream
-post_save.connect(Stream.add_post, sender=Post)
+# A model for recommendations in explore page
+class Recommendation(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='recommendation')
+    posts = models.ManyToManyField(Post)
+    score = models.IntegerField(default=0)
+
+    def __str__(self):
+        return f'Recommendation for {self.user.email}'

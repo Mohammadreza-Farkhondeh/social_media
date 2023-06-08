@@ -3,8 +3,8 @@ from django.urls import path, include
 
 
 v1_patterns = [
-    path('posts/', include('applications.posts.urls')),
-    path('users/', include('applications.authy.urls')),
+    path('posts/', include('posts.urls')),
+    path('users/', include('users.urls')),
 ]
 
 
