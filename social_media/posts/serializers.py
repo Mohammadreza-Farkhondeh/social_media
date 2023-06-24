@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Post, PostContent, Tag, Like
+from .models import Post, PostContent, Tag, Like, Recommendation
 
 
 # A serializer class for the Tag model
@@ -20,12 +20,21 @@ class PostContentSerializer(serializers.ModelSerializer):
 class PostSerializer(serializers.ModelSerializer):
     # Nested serializers for the user, tags and postcontent fields
     user = serializers.ReadOnlyField(source='user.email')
-    tags = TagSerializer(many=True)
-    postcontent = PostContentSerializer(many=True)
+    tags = TagSerializer(many=True, read_only=True)
+    postcontent = PostContentSerializer(many=True, read_only=True)
 
     class Meta:
         model = Post
-        fields = ('user', 'id', 'tags', 'content', 'posted', 'caption',)
+        fields = ('user', 'id', 'tags', 'content', 'posted', 'caption', 'postcontent')
+
+
+class RecommendationPostSerializer(serializers.ModelSerializer):
+    # Nested serializers for the user, tags and postcontent fields
+    # post = PostSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Recommendation
+        fields = ('post',)
 
 
 # A serializer class for the Like model

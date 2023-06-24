@@ -7,7 +7,7 @@ import uuid
 
 def user_directory_path(instance, filename):
     # File will be uploaded to MEDIA_ROOT/user_<id>/<filename>
-    return f'/user_{instance.user.id}/{filename}'
+    return f'user_{instance.user.id}/{filename}'
 
 
 # Define Tag model for its usage in post model
@@ -68,8 +68,10 @@ class Like(models.Model):
 # A model for recommendations in explore page
 class Recommendation(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='recommendation')
-    posts = models.ManyToManyField(Post)
+    post = models.ManyToManyField(Post)
     score = models.IntegerField(default=0)
+    tags = models.ManyToManyField(Tag, blank=True, related_name='Rtags')
+
 
     def __str__(self):
         return f'Recommendation for {self.user.email}'

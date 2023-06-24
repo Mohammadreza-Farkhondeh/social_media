@@ -28,12 +28,13 @@ def generate_recommendations(user):
     sorted_posts = np.argsort(-top_posts)  # Sort the posts by the number of likes and get the indices
 
     # Get the top 10 most liked posts (excluding the ones already liked by the input user)
-    recommended_posts = [post for post in sorted_posts if post not in likes_matrix.columns[likes_matrix.loc[user.id] > 0]][:10]
+    recommended_posts = [post for post, id in sorted_posts.items() if post not in likes_matrix.columns[likes_matrix.loc[user.id] > 0]][:10]
 
     # Create or update recommendations for the input user
     for post_id in recommended_posts:
-        post = Post.objects.get(id=post_id)
-        recommendation, created = Recommendation.objects.get_or_create(user=user, post=post)
+        post = Post.objects.get(id=(post_id))
+        recommendation, created = Recommendation.objects.get_or_create(user=user)
+        recommendation.post.add(post)
         if not created:
             recommendation.score += 1
             recommendation.save()

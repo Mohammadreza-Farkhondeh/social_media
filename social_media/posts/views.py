@@ -1,6 +1,6 @@
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
-from .serializers import PostSerializer, LikeSerializer
+from .serializers import PostSerializer, LikeSerializer, RecommendationPostSerializer
 from .models import Post, Like, Follow, Recommendation
 from .utils import generate_recommendations
 
@@ -24,9 +24,9 @@ class PostList(generics.ListCreateAPIView):
 
 
 # A view class for explore page including recommender system
-class exploreList(generics.ListAPIView):
-    permission_classes = (IsAuthenticated)
-    sriallizer_class = PostSerializer
+class ExploreList(generics.ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = RecommendationPostSerializer
 
     def get_queryset(self):
         user = self.request.user  # Get the current user from the request

@@ -20,6 +20,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
+    'dj_rest_auth',
+    'dj_rest_auth.registration',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -45,12 +47,13 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'postgresDB',
-        'USER': 'postgresUser',
+        'USER': 'postgres',
         'PASSWORD': 'postgresPassword',
         'HOST': 'localhost',
         'PORT': '5432',
     }
 }
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -72,9 +75,11 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-LOGIN_REDIRECT_URL = 'posts:post-list'
-LOGIN_URL = 'users:token_obtain_pair'
-LOGOUT_REDIRECT_URL = 'users:token_obtain_pair'
+JWT_AUTH_COOKIE = 'jwt'
+
+# LOGIN_REDIRECT_URL = 'posts:post-list'
+# LOGIN_URL = 'users:token_obtain_pair'
+# LOGOUT_REDIRECT_URL = 'users:token_obtain_pair'
 
 PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.PBKDF2PasswordHasher',
@@ -90,7 +95,7 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'SIMPLE_JWT': {
-        'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
+        'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
         'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
         'ROTATE_REFRESH_TOKENS': False,
         'BLACKLIST_AFTER_ROTATION': True,

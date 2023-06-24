@@ -31,11 +31,14 @@ class Profile(models.Model):
     # Override the save() method to resize the image
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        img = Image.open(self.avatar.path)
-        if img.height > 300 or img.width > 300:
-            output_size = (300, 300)
-            img.thumbnail(output_size)
-            img.save(self.avatar.path)
+        try:
+            img = Image.open(self.avatar.path)
+            if img.height > 300 or img.width > 300:
+                output_size = (300, 300)
+                img.thumbnail(output_size)
+                img.save(self.avatar.path)
+        except:
+            pass
 
     def __str__(self):
         return self.user.username
