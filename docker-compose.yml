@@ -1,7 +1,7 @@
 version: '3'
 
 services:
-  social_media_postgresql:
+  database:
     image: postgres:15
     container_name: social_media_postgresql
     volumes:
@@ -12,9 +12,23 @@ services:
       - "5432:5432"
     networks:
       - social_media_network
+      
+  cache:
+    image: redis:6.2-alpine
+    container_name: social_media_redis
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+    volumes:
+      - social_media_cache:/data
+    networks:
+      - social_media_network
 
 volumes:
   social_media_postgresql:
+    external: true
+  social_media_cache:
     external: true
 
 networks:
